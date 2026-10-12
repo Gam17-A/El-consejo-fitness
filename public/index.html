@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>El consejo fitness</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f6f3;--card:#fff;--ink:#111;--mute:#6b6b66;--line:#e3e3dd;--acc:#8fc400;--accbg:#c6ff3d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c0c0d;--card:#151517;--ink:#f2f2ee;--mute:#8b8b86;--line:#26262a;--acc:#c6ff3d}}
+:root[data-theme="dark"]{--bg:#0c0c0d;--card:#151517;--ink:#f2f2ee;--mute:#8b8b86;--line:#26262a;--acc:#c6ff3d}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,system-ui,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:0 18px 80px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 0;flex-wrap:wrap}
+.logo{font:800 26px/1 'Barlow Condensed',Impact,sans-serif;letter-spacing:.04em;text-transform:uppercase}
+.logo b{background:var(--accbg);color:#111;padding:2px 8px;margin-left:4px;display:inline-block;transform:skewX(-8deg)}
+nav{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:26px;overflow-x:auto}
+nav button,.tabs button{background:none;border:0;color:var(--mute);font:700 18px 'Barlow Condensed',Impact,sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:10px 14px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px;white-space:nowrap}
+nav button.on,.tabs button.on{color:var(--ink);border-color:var(--accbg)}
+button,input,select,textarea{font:inherit;color:inherit}
+.btn{background:var(--accbg);color:#111;border:0;padding:10px 18px;font:700 16px 'Barlow Condensed',Impact,sans-serif;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;border-radius:4px}
+.btn.ghost{background:none;border:1px solid var(--line);color:var(--ink)}
+.btn.sm{padding:6px 12px;font-size:14px}
+.btn:hover{filter:brightness(.95)}
+input,select,textarea{width:100%;background:var(--card);border:1px solid var(--line);border-radius:4px;padding:10px 12px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--acc)}
+textarea{resize:vertical;min-height:84px}
+label.l{display:block;font-size:12px;color:var(--mute);margin:12px 0 4px;text-align:left;text-transform:uppercase;letter-spacing:.06em}
+.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:18px;margin-bottom:16px}
+.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1 1 140px}
+h2{font:800 28px/1 'Barlow Condensed',Impact,sans-serif;text-transform:uppercase;letter-spacing:.03em;margin:0 0 14px}
+h3{margin:0;font:700 22px/1.1 'Barlow Condensed',Impact,sans-serif;text-transform:uppercase;letter-spacing:.03em}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.stat{border:1px solid var(--line);background:var(--card);border-radius:6px;padding:14px}
+.stat b{display:block;font:800 38px/1 'Barlow Condensed',Impact,sans-serif}
+.stat span{color:var(--mute);font-size:13px}
+.mute{color:var(--mute);font-size:13px}
+.tag{display:inline-block;font:700 12px 'Barlow Condensed',Impact,sans-serif;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:3px;background:var(--accbg);color:#111}
+.tag.q{background:none;border:1px solid var(--mute);color:var(--mute)}
+.ex{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line);cursor:pointer}
+.ex input{width:20px;height:20px;accent-color:var(--acc);flex:none;padding:0}
+.ex.done span{text-decoration:line-through;color:var(--mute)}
+.bar{height:4px;background:var(--line);margin:10px 0 6px;border-radius:2px}
+.bar i{display:block;height:100%;background:var(--accbg);border-radius:2px}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.x{background:none;border:0;color:var(--mute);cursor:pointer;font-size:13px;padding:0}
+.x:hover,.x.on{color:var(--ink)}
+.cm{border-left:2px solid var(--line);padding:2px 0 2px 12px;margin:10px 0}
+.post p{white-space:pre-wrap;margin:8px 0 12px;word-break:break-word}
+.empty{text-align:center;color:var(--mute);padding:36px 10px;border:1px dashed var(--line);border-radius:6px}
+.auth{max-width:400px;margin:30px auto;text-align:center}
+.auth h2{font-size:40px}
+.tabs{display:flex;justify-content:center;border-bottom:1px solid var(--line);margin-bottom:8px}
+.err{color:#e5484d;font-size:13px;min-height:18px;margin:10px 0 0}
+.chip{display:flex;align-items:center;gap:10px}
+.av{width:30px;height:30px;border-radius:50%;background:var(--accbg);color:#111;display:grid;place-items:center;font:800 16px 'Barlow Condensed',sans-serif;text-transform:uppercase}
+.fl{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.fl button.f{background:none;border:1px solid var(--line);border-radius:20px;padding:4px 14px;cursor:pointer;color:var(--mute)}
+.fl button.f.on{background:var(--accbg);color:#111;border-color:var(--accbg)}
+.fl input{flex:1 1 160px;width:auto}
+.timer{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.timer b{font:800 40px 'Barlow Condensed',sans-serif;min-width:80px}
+.note{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accbg);padding:10px 14px;border-radius:4px;margin-bottom:16px;font-size:14px}
+.dots{display:flex;gap:6px;margin-top:8px}.dots i{flex:1;height:26px;border-radius:3px;background:var(--line)}.dots i.a{background:var(--accbg)}
+.er{display:grid;grid-template-columns:3fr 1fr 1fr 1fr auto;gap:8px;margin-bottom:8px}.er input{min-width:0;padding:10px 8px}
+svg text{fill:var(--mute);font-size:11px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="logo">El consejo<b>fitness</b></div><div class="chip"><button class="x" onclick="theme()" title="Cambiar tema">◐ Tema</button><div id="who" class="chip"></div></div></header>
+<div id="app"></div>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const DAYS=['Cualquier día','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+const S={tab:'rutinas',mode:'login',user:null,routines:[],done:[],dates:[],total:0,weights:[],posts:[],drafts:{},pd:{type:'Tip',title:'',body:''},filter:'Todos',q:''};
+const dk=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const today=()=>dk(new Date());
+const ago=t=>{const m=Math.floor((Date.now()-new Date(t))/6e4);if(m<1)return 'ahora';if(m<60)return m+' min';const h=Math.floor(m/60);return h<24?h+' h':Math.floor(h/24)+' d'};
+function theme(){const r=document.documentElement,d=getComputedStyle(r).getPropertyValue('--bg').trim()==='#0c0c0d';r.dataset.theme=d?'light':'dark';try{localStorage.setItem('ecf:theme',r.dataset.theme)}catch(e){}}
+try{const t=localStorage.getItem('ecf:theme');if(t)document.documentElement.dataset.theme=t}catch(e){}
+
+/* ---- Modo sin servidor: mismas rutas que la API, pero con datos en localStorage ---- */
+const L={get(k,d){try{return JSON.parse(localStorage.getItem('ecf:'+k))??d}catch(e){return d}},set(k,v){localStorage.setItem('ecf:'+k,JSON.stringify(v))},id:()=>Math.random().toString(36).slice(2,10)+Date.now().toString(36)};
+async function hashPw(p,s){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s+p));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){return btoa(unescape(encodeURIComponent(s+p)))}}
+async function localApi(m,p,b={}){
+  const[path,qs]=p.split('?'),Q=new URLSearchParams(qs||''),key=m+' '+path;
+  const users=L.get('users',[]),me=users.find(u=>u.id===L.get('sid',null)),name=id=>(users.find(u=>u.id===id)||{}).username||'?';
+  if(key==='POST /auth/register'){
+    const un=(b.username||'').trim(),em=(b.email||'').trim().toLowerCase(),pw=b.password||'';
+    if(!/^[\p{L}\p{N}_.-]{3,24}$/u.test(un))throw 'Usuario: de 3 a 24 caracteres (letras, números, _ . -).';
+    if(!/^\S+@\S+\.\S+$/.test(em))throw 'Correo no válido.';
+    if(pw.length<8)throw 'La contraseña debe tener al menos 8 caracteres.';
+    if(users.some(u=>u.email===em))throw 'Ese correo ya está registrado.';
+    if(users.some(u=>u.username.toLowerCase()===un.toLowerCase()))throw 'Ese usuario ya existe.';
+    const salt=L.id(),u={id:L.id(),username:un,email:em,salt,hash:await hashPw(pw,salt)};
+    users.push(u);L.set('users',users);L.set('sid',u.id);return{user:{username:un}};
+  }
+  if(key==='POST /auth/login'){
+    const em=(b.email||'').trim().toLowerCase(),u=users.find(x=>x.email===em);
+    if(!u||u.hash!==await hashPw(b.password||'',u.salt))throw 'Correo o contraseña incorrectos.';
+    L.set('sid',u.id);return{user:{username:u.username}};
+  }
+  if(key==='POST /auth/logout'){L.set('sid',null);return{ok:true}}
+  if(!me)throw 'No autenticado';
+  const my=a=>a.filter(x=>x.user_id===me.id);let mt;
+  if(key==='GET /me')return{user:{username:me.username,email:me.email}};
+  const rs=L.get('routines',[]),logs=L.get('logs',[]);
+  if(key==='GET /routines')return{routines:my(rs)};
+  if(key==='POST /routines'){
+    const ex=(b.exercises||[]).filter(e=>e&&String(e.name||'').trim());
+    if(!String(b.name||'').trim()||!ex.length)throw 'Pon un nombre y al menos un ejercicio.';
+    rs.push({id:L.id(),user_id:me.id,name:b.name.trim().slice(0,40),day:+b.day||0,exercises:ex.map(e=>({id:L.id(),name:String(e.name).trim().slice(0,60),sets:+e.sets,reps:+e.reps,weight_kg:e.weight_kg==null?null:+e.weight_kg}))});
+    L.set('routines',rs);return{ok:true};
+  }
+  if(mt=key.match(/^DELETE \/routines\/(.+)$/)){const r=rs.find(x=>x.id===mt[1]&&x.user_id===me.id);if(r){L.set('routines',rs.filter(x=>x!==r));L.set('logs',logs.filter(l=>!r.exercises.some(e=>e.id===l.ex)))}return{ok:true}}
+  const mine=my(rs).flatMap(r=>r.exercises.map(e=>e.id));
+  if(key==='GET /logs'){const d=Q.get('date')||'',ml=logs.filter(l=>mine.includes(l.ex));return{done:ml.filter(l=>l.date===d).map(l=>l.ex),dates:[...new Set(ml.map(l=>l.date))].sort(),total:ml.length}}
+  if(key==='POST /logs/toggle'){if(!mine.includes(b.routine_exercise_id))throw 'No encontrado';const i=logs.findIndex(l=>l.ex===b.routine_exercise_id&&l.date===b.date);i>=0?logs.splice(i,1):logs.push({ex:b.routine_exercise_id,date:b.date});L.set('logs',logs);return{done:i<0}}
+  const ws=L.get('weights',[]);
+  if(key==='GET /weights')return{weights:my(ws).sort((a,c)=>a.d<c.d?-1:1).map(({d,kg})=>({d,kg}))};
+  if(key==='POST /weights'){const kg=Math.round(+b.kg*10)/10;if(!(kg>=20&&kg<=400))throw 'Peso o fecha no válidos.';L.set('weights',ws.filter(w=>!(w.user_id===me.id&&w.d===b.date)).concat({user_id:me.id,d:b.date,kg}));return{ok:true}}
+  const ps=L.get('posts',[]),cs=L.get('comments',[]),lk=L.get('likes',[]);
+  if(key==='GET /posts'){const t=Q.get('type'),q=(Q.get('q')||'').toLowerCase();
+    return{posts:ps.filter(p=>(!t||p.type===t)&&(!q||(p.title+' '+p.body).toLowerCase().includes(q))).sort((a,c)=>c.created_at.localeCompare(a.created_at)).map(p=>({...p,author:name(p.user_id),mine:p.user_id===me.id,likes:lk.filter(l=>l.post_id===p.id).length,liked:lk.some(l=>l.post_id===p.id&&l.user_id===me.id),comments:cs.filter(c=>c.post_id===p.id).map(c=>({...c,author:name(c.user_id),mine:c.user_id===me.id}))}))}}
+  if(key==='POST /posts'){if(!['Tip','Pregunta'].includes(b.type)||!String(b.title||'').trim()||!String(b.body||'').trim())throw 'Completa el tipo, el título y el texto.';ps.push({id:L.id(),user_id:me.id,type:b.type,title:b.title.trim().slice(0,80),body:b.body.trim().slice(0,1500),created_at:new Date().toISOString()});L.set('posts',ps);return{ok:true}}
+  if(mt=key.match(/^DELETE \/posts\/(.+)$/)){const keep=ps.filter(p=>!(p.id===mt[1]&&p.user_id===me.id)),ok=id=>keep.some(p=>p.id===id);L.set('posts',keep);L.set('comments',cs.filter(c=>ok(c.post_id)));L.set('likes',lk.filter(l=>ok(l.post_id)));return{ok:true}}
+  if(mt=key.match(/^POST \/posts\/(.+)\/like$/)){const i=lk.findIndex(l=>l.post_id===mt[1]&&l.user_id===me.id);i>=0?lk.splice(i,1):lk.push({post_id:mt[1],user_id:me.id});L.set('likes',lk);return{liked:i<0}}
+  if(mt=key.match(/^POST \/posts\/(.+)\/comments$/)){const t=String(b.body||'').trim();if(!t)throw 'Escribe un comentario.';cs.push({id:L.id(),post_id:mt[1],user_id:me.id,body:t.slice(0,500),created_at:new Date().toISOString()});L.set('comments',cs);return{ok:true}}
+  if(mt=key.match(/^DELETE \/comments\/(.+)$/)){L.set('comments',cs.filter(c=>!(c.id===mt[1]&&c.user_id===me.id)));return{ok:true}}
+  throw 'Ruta no encontrada';
+}
+
+/* ---- Cliente de la API: usa el servidor si existe; si no, el modo local ---- */
+let LOCAL=false,PROBED=false;
+async function api(method,path,body){
+  if(LOCAL)return localApi(method,path,body);
+  let r;
+  try{r=await fetch('/api'+path,{method,headers:body?{'Content-Type':'application/json'}:{},body:body?JSON.stringify(body):undefined,credentials:'same-origin'})}
+  catch(e){if(!PROBED){LOCAL=true;return localApi(method,path,body)}throw 'No se pudo conectar con el servidor.'}
+  if(!(r.headers.get('content-type')||'').includes('json')){if(!PROBED){LOCAL=true;return localApi(method,path,body)}throw 'Respuesta inesperada del servidor.'}
+  PROBED=true;
+  let d={};try{d=await r.json()}catch(e){}
+  if(!r.ok){if(r.status===401&&S.user){S.user=null;render()}throw d.error||'Error del servidor'}
+  return d;
+}
+const _render=render;render=function(){_render();if(LOCAL)$('#app').insertAdjacentHTML('afterbegin','<div class="note">Modo sin servidor: tus datos se guardan solo en este navegador. Con <b>npm start</b> se guardan en PostgreSQL.</div>')};
+const run=async f=>{try{await f()}catch(e){alert(typeof e==='string'?e:'Ocurrió un error.')}};
+
+/* ---- Autenticación ---- */
+async function submitAuth(){
+  const v=id=>($('#'+id)||{value:''}).value.trim(),reg=S.mode==='reg',err=m=>$('#aerr').textContent=m;
+  const email=v('ae'),pass=($('#ap')||{}).value||'';
+  if(!/^\S+@\S+\.\S+$/.test(email))return err('Escribe un correo válido.');
+  if(reg){if(v('an').length<3)return err('El usuario debe tener al menos 3 caracteres.');if(pass.length<8)return err('La contraseña debe tener al menos 8 caracteres.');if(pass!==$('#ap2').value)return err('Las contraseñas no coinciden.')}
+  try{const d=await api('POST',reg?'/auth/register':'/auth/login',reg?{username:v('an'),email,password:pass}:{email,password:pass});S.user=d.user.username;S.tab='rutinas';await load()}
+  catch(e){err(typeof e==='string'?e:'Ocurrió un error.')}
+}
+async function logout(){try{await api('POST','/auth/logout')}catch(e){}S.user=null;S.mode='login';render()}
+function renderAuth(){
+  const reg=S.mode==='reg';
+  $('#who').innerHTML='';
+  $('#app').innerHTML=`<div class="auth card"><h2>${reg?'Crea tu cuenta':'Entra y muévete'}</h2>
+  <div class="tabs"><button class="${reg?'':'on'}" onclick="S.mode='login';render()">Iniciar sesión</button><button class="${reg?'on':''}" onclick="S.mode='reg';render()">Registrarse</button></div>
+  ${reg?'<label class="l">Nombre de usuario</label><input id="an" maxlength="24" autocomplete="username">':''}
+  <label class="l">Correo</label><input id="ae" type="email" autocomplete="email">
+  <label class="l">Contraseña</label><input id="ap" type="password" autocomplete="${reg?'new-password':'current-password'}">
+  ${reg?'<label class="l">Repite la contraseña</label><input id="ap2" type="password" autocomplete="new-password">':''}
+  <label class="mute" style="display:block;text-align:left;margin-top:10px"><input type="checkbox" style="width:auto" onchange="document.querySelectorAll('#ap,#ap2').forEach(i=>i.type=this.checked?'text':'password')"> Mostrar contraseña</label>
+  <div class="err" id="aerr"></div><button class="btn" style="width:100%;margin-top:10px" onclick="submitAuth()">${reg?'Crear cuenta':'Entrar'}</button></div>`;
+  $('#app').onkeydown=e=>{if(e.key==='Enter'&&e.target.tagName==='INPUT'&&e.target.type!=='checkbox')submitAuth()};
+}
+function go(t){S.tab=t;render();if(t==='comunidad')loadPosts()}
+function render(){
+  if(!S.user)return renderAuth();
+  $('#app').onkeydown=null;
+  $('#who').innerHTML=`<div class="av">${esc(S.user[0])}</div><b>${esc(S.user)}</b><button class="x" onclick="logout()">Salir</button>`;
+  const T=[['rutinas','Mis rutinas'],['progreso','Progreso'],['comunidad','Comunidad']];
+  $('#app').innerHTML=`<nav>${T.map(t=>`<button class="${S.tab===t[0]?'on':''}" onclick="go('${t[0]}')">${t[1]}</button>`).join('')}</nav><div id="view"></div>`;
+  ({rutinas:renderRoutines,progreso:renderProgress,comunidad:renderCommunity})[S.tab]();
+}
+async function load(){
+  try{const[r,l,w]=await Promise.all([api('GET','/routines'),api('GET','/logs?date='+today()),api('GET','/weights')]);S.routines=r.routines;S.done=l.done;S.dates=l.dates;S.total=l.total;S.weights=w.weights}catch(e){}
+  render();if(S.tab==='comunidad')loadPosts();
+}
+async function reloadLogs(){const l=await api('GET','/logs?date='+today());S.done=l.done;S.dates=l.dates;S.total=l.total}
+
+/* ---- Estadísticas ---- */
+const act=k=>S.dates.includes(k);
+function streak(){let n=0;const d=new Date();if(!act(dk(d)))d.setDate(d.getDate()-1);while(act(dk(d))){n++;d.setDate(d.getDate()-1)}return n}
+function weekActive(){let n=0;for(let i=0;i<7;i++){const d=new Date();d.setDate(d.getDate()-i);if(act(dk(d)))n++}return n}
+
+/* ---- Rutinas ---- */
+const TM={left:0,on:false,iv:null};
+function startTimer(s){clearInterval(TM.iv);TM.left=s;TM.on=true;tick();TM.iv=setInterval(()=>{TM.left--;tick();if(TM.left<=0){clearInterval(TM.iv);try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}}},1000)}
+function tick(){const e=$('#tm');if(e)e.textContent=!TM.on?'—':TM.left>0?Math.floor(TM.left/60)+':'+String(TM.left%60).padStart(2,'0'):'¡Listo!'}
+const rowHtml=()=>'<div class="er"><input class="en" placeholder="Ejercicio" maxlength="60"><input class="es" type="number" min="1" max="99" placeholder="Series"><input class="ep" type="number" min="1" max="999" placeholder="Reps"><input class="ek" type="number" min="0" max="999" step="0.5" placeholder="Kg"><button class="x" onclick="this.parentNode.remove()" title="Quitar">✕</button></div>';
+function renderRoutines(){
+  let tot=0,done=0;S.routines.forEach(r=>{tot+=r.exercises.length;done+=r.exercises.filter(e=>S.done.includes(e.id)).length});
+  const wd=new Date().getDay(),tn=wd===0?7:wd;
+  const list=S.routines.map(r=>{
+    const dn=r.exercises.filter(e=>S.done.includes(e.id)).length,pct=Math.round(dn/r.exercises.length*100);
+    return `<div class="card"><div class="head"><div><h3>${esc(r.name)}</h3><span class="mute">${DAYS[r.day]}${r.day===tn?' · hoy':''}</span></div><button class="x" onclick="delRoutine('${r.id}')">Eliminar</button></div>
+    <div class="bar"><i style="width:${pct}%"></i></div><div class="mute" style="margin-bottom:6px">${dn}/${r.exercises.length} ejercicios${pct===100?' · ¡completada! 💪':''}</div>
+    ${r.exercises.map(e=>`<label class="ex ${S.done.includes(e.id)?'done':''}"><input type="checkbox" ${S.done.includes(e.id)?'checked':''} onchange="toggleEx('${e.id}')"><span>${esc(e.name)} · ${e.sets}×${e.reps}${e.weight_kg!=null?' · '+e.weight_kg+' kg':''}</span></label>`).join('')}</div>`}).join('');
+  $('#view').innerHTML=`<div class="stats"><div class="stat"><b>${streak()}</b><span>Racha (días)</span></div><div class="stat"><b>${done}/${tot}</b><span>Hechos hoy</span></div><div class="stat"><b>${weekActive()}/7</b><span>Activos esta semana</span></div></div>
+  <div class="card timer"><span class="mute" style="flex:1 1 100%">Descanso entre series</span><b id="tm">—</b>${[30,60,90,120].map(s=>`<button class="btn ghost sm" onclick="startTimer(${s})">${s}s</button>`).join('')}</div>
+  <div class="card"><h2>Nueva rutina</h2><div class="row"><input id="rn" placeholder="Nombre (ej. Pecho y tríceps)" maxlength="40"><select id="rd">${DAYS.map((d,i)=>`<option value="${i}">${d}</option>`).join('')}</select></div>
+  <div class="mute" style="margin:14px 0 6px">Ejercicios</div><div id="rows">${rowHtml()}${rowHtml()}</div>
+  <div style="display:flex;gap:10px;margin-top:6px"><button class="btn ghost sm" onclick="$('#rows').insertAdjacentHTML('beforeend',rowHtml())">+ Ejercicio</button><button class="btn" onclick="addRoutine()">Guardar rutina</button></div></div>
+  ${list||'<div class="empty">Aún no tienes rutinas. Crea la primera arriba.</div>'}`;
+  tick();
+}
+async function addRoutine(){
+  const name=$('#rn').value.trim(),n=(r,c)=>r.querySelector(c).value;
+  const ex=[...document.querySelectorAll('.er')].map(r=>({name:n(r,'.en').trim(),sets:+n(r,'.es'),reps:+n(r,'.ep'),weight_kg:n(r,'.ek')===''?null:+n(r,'.ek')})).filter(e=>e.name);
+  if(!name||!ex.length)return alert('Pon un nombre y al menos un ejercicio.');
+  if(ex.some(e=>!(e.sets>=1)||!(e.reps>=1)))return alert('Cada ejercicio necesita series y repeticiones.');
+  run(async()=>{await api('POST','/routines',{name,day:+$('#rd').value,exercises:ex});await load()});
+}
+const delRoutine=id=>confirm('¿Eliminar esta rutina?')&&run(async()=>{await api('DELETE','/routines/'+id);await load()});
+const toggleEx=id=>run(async()=>{await api('POST','/logs/toggle',{routine_exercise_id:id,date:today()});await reloadLogs();renderRoutines()});
+
+/* ---- Progreso ---- */
+function renderProgress(){
+  const w=S.weights.slice(-12);
+  let chart='<div class="empty">Registra tu peso para ver la gráfica.</div>';
+  if(w.length){const vs=w.map(x=>x.kg),mn=Math.min(...vs)-1,mx=Math.max(...vs)+1,W=600,H=150,px=i=>w.length>1?30+i*(W-60)/(w.length-1):W/2,py=v=>H-25-(v-mn)/(mx-mn)*(H-50);
+    chart=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto"><polyline fill="none" stroke="var(--acc)" stroke-width="3" points="${w.map((x,i)=>px(i)+','+py(x.kg)).join(' ')}"/>${w.map((x,i)=>`<circle cx="${px(i)}" cy="${py(x.kg)}" r="4" fill="var(--acc)"/><text x="${px(i)}" y="${py(x.kg)-9}" text-anchor="middle">${x.kg}</text><text x="${px(i)}" y="${H-6}" text-anchor="middle">${x.d.slice(5)}</text>`).join('')}</svg>`}
+  const days=[...Array(14)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-13+i);return act(dk(d))});
+  const diff=w.length>1?(w[w.length-1].kg-w[0].kg).toFixed(1):'0.0';
+  $('#view').innerHTML=`<div class="stats"><div class="stat"><b>${S.total}</b><span>Ejercicios totales</span></div><div class="stat"><b>${w.length?w[w.length-1].kg:'—'}</b><span>Peso actual (kg)</span></div><div class="stat"><b>${diff>0?'+':''}${diff}</b><span>Cambio (kg)</span></div></div>
+  <div class="card"><h2>Peso corporal</h2><div class="row" style="margin-bottom:12px"><input id="wk" type="number" step="0.1" min="20" max="400" placeholder="Peso en kg"><button class="btn" style="flex:none" onclick="addWeight()">Registrar hoy</button></div>${chart}</div>
+  <div class="card"><h2>Últimos 14 días</h2><div class="dots">${days.map(a=>`<i class="${a?'a':''}"></i>`).join('')}</div><div class="mute" style="margin-top:8px">Cada barra verde es un día en que completaste al menos un ejercicio.</div></div>`;
+}
+function addWeight(){const kg=parseFloat($('#wk').value);if(!(kg>=20&&kg<=400))return alert('Escribe un peso entre 20 y 400 kg.');run(async()=>{await api('POST','/weights',{kg,date:today()});S.weights=(await api('GET','/weights')).weights;renderProgress()})}
+
+/* ---- Comunidad ---- */
+function renderCommunity(){
+  const d=S.pd;
+  $('#view').innerHTML=`<div class="card"><h2>Comparte con la comunidad</h2><div class="row"><select id="pt"><option ${d.type==='Tip'?'selected':''}>Tip</option><option ${d.type==='Pregunta'?'selected':''}>Pregunta</option></select><input id="ptitle" placeholder="Título" maxlength="80" value="${esc(d.title)}" style="flex:3 1 220px"></div>
+  <textarea id="pbody" placeholder="Cuéntanos tu tip o haz tu pregunta…" maxlength="1500" style="margin:10px 0">${esc(d.body)}</textarea><button class="btn" onclick="addPost()">Publicar</button></div>
+  <div class="fl">${['Todos','Tip','Pregunta'].map(f=>`<button class="f ${S.filter===f?'on':''}" onclick="S.filter='${f}';renderCommunity();loadPosts()">${f==='Todos'?'Todos':f+'s'}</button>`).join('')}<input id="pq" placeholder="Buscar…" value="${esc(S.q)}"></div><div id="plist"></div>`;
+  ['pt','ptitle','pbody'].forEach(id=>$('#'+id).addEventListener('input',()=>{S.pd={type:$('#pt').value,title:$('#ptitle').value,body:$('#pbody').value}}));
+  let t;$('#pq').addEventListener('input',e=>{S.q=e.target.value;clearTimeout(t);t=setTimeout(loadPosts,300)});
+  renderPosts();
+}
+async function loadPosts(){try{S.posts=(await api('GET','/posts?type='+(S.filter==='Todos'?'':S.filter)+'&q='+encodeURIComponent(S.q))).posts;renderPosts()}catch(e){}}
+function renderPosts(){
+  const el=$('#plist');if(!el||S.tab!=='comunidad')return;
+  el.innerHTML=S.posts.map(p=>`<div class="card post"><div class="head"><div><span class="tag ${p.type==='Pregunta'?'q':''}">${esc(p.type)}</span> <span class="mute">${esc(p.author)} · ${ago(p.created_at)}</span></div>${p.mine?`<button class="x" onclick="delPost('${p.id}')">Eliminar</button>`:''}</div>
+    <h3 style="margin-top:10px">${esc(p.title)}</h3><p>${esc(p.body)}</p>
+    <div class="mute"><button class="x ${p.liked?'on':''}" onclick="like('${p.id}')">${p.liked?'♥':'♡'} ${p.likes}</button> &nbsp;·&nbsp; <b>${p.comments.length}</b> comentario${p.comments.length===1?'':'s'}</div>
+    ${p.comments.map(c=>`<div class="cm"><b>${esc(c.author)}</b> <span class="mute">· ${ago(c.created_at)}${c.mine?` · <button class="x" onclick="delComment('${c.id}')">borrar</button>`:''}</span><div style="white-space:pre-wrap;word-break:break-word">${esc(c.body)}</div></div>`).join('')}
+    <div class="row" style="margin-top:10px;flex-wrap:nowrap"><input data-p="${p.id}" placeholder="Escribe un comentario…" maxlength="500" value="${esc(S.drafts[p.id]||'')}" oninput="S.drafts['${p.id}']=this.value" onkeydown="if(event.key==='Enter')addComment('${p.id}')"><button class="btn ghost" style="flex:none" onclick="addComment('${p.id}')">Comentar</button></div></div>`).join('')||'<div class="empty">No hay publicaciones todavía. ¡Sé la primera persona!</div>';
+}
+function addPost(){const d=S.pd;if(!d.title.trim()||!d.body.trim())return alert('Escribe un título y un texto.');run(async()=>{await api('POST','/posts',{type:d.type,title:d.title,body:d.body});S.pd={type:'Tip',title:'',body:''};renderCommunity();await loadPosts()})}
+const delPost=id=>confirm('¿Eliminar esta publicación?')&&run(async()=>{await api('DELETE','/posts/'+id);await loadPosts()});
+const like=id=>run(async()=>{await api('POST','/posts/'+id+'/like');await loadPosts()});
+function addComment(id){const t=(S.drafts[id]||'').trim();if(!t)return;run(async()=>{await api('POST','/posts/'+id+'/comments',{body:t});S.drafts[id]='';await loadPosts()})}
+const delComment=id=>run(async()=>{await api('DELETE','/comments/'+id);await loadPosts()});
+setInterval(()=>{const a=document.activeElement;if(S.user&&S.tab==='comunidad'&&!(a&&a.dataset&&a.dataset.p))loadPosts()},15000);
+
+/* ---- Inicio ---- */
+api('GET','/me').then(d=>{S.user=d.user.username;load()}).catch(()=>render());
+</script>
+</body>
+</html>
