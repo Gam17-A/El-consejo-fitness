@@ -26,6 +26,7 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const isDate = s => /^\d{4}-\d{2}-\d{2}$/.test(s) && !isNaN(Date.parse(s)) && Date.parse(s) - Date.now() < 2 * 864e5;
 const DUMMY = bcrypt.hashSync('relleno-contra-timing', 12);
+const isAdmin = user => user && user.role === 'admin';
 app.param('id', (req, res, next, v) => UUID.test(v) ? next() : bad(res, 'No encontrado', 404));
 
 async function startSession(res, userId) {
@@ -35,7 +36,7 @@ async function startSession(res, userId) {
 }
 async function auth(req, res, next) {
   const t = req.cookies.sid;
-  const r = t && await q('SELECT u.id,u.username,u.email FROM sessions s JOIN users u ON u.id=s.user_id WHERE s.token_hash=$1 AND s.expires_at>now()', [sha(t)]);
+  const r = t && await q('SELECT u.id,u.username,u.email,u.role FROM sessions s JOIN users u ON u.id=s.user_id WHERE s.token_hash=$1 AND s.expires_at>now()', [sha(t)]);
   if (!r || !r.rows[0]) return bad(res, 'No autenticado', 401);
   req.user = r.rows[0]; next();
 }
@@ -68,7 +69,7 @@ app.post('/api/auth/logout', async (req, res) => {
   if (req.cookies.sid) await q('DELETE FROM sessions WHERE token_hash=$1', [sha(req.cookies.sid)]);
   res.clearCookie('sid'); res.json({ ok: true });
 });
-app.get('/api/me', auth, (req, res) => res.json({ user: { username: req.user.username, email: req.user.email } }));
+app.get('/api/me', auth, (req, res) => res.json({ user: { username: req.user.username, email: req.user.email, role: req.user.role } }));
 
 /* ---------- rutinas ---------- */
 app.get('/api/routines', auth, async (req, res) => {
@@ -179,6 +180,36 @@ app.post('/api/posts/:id/comments', auth, async (req, res) => {
 });
 app.delete('/api/comments/:id', auth, async (req, res) => {
   const r = await q('DELETE FROM comments WHERE id=$1 AND user_id=$2', [req.params.id, req.user.id]);
+  r.rowCount ? res.json({ ok: true }) : bad(res, 'No encontrado', 404);
+});
+
+/* ---------- administración ---------- */
+app.get('/api/admin/users', auth, async (req, res) => {
+  if (!isAdmin(req.user)) return bad(res, 'No autorizado', 403);
+  const { rows } = await q('SELECT id, username, email, role, created_at FROM users ORDER BY created_at DESC');
+  res.json({ users: rows });
+});
+app.put('/api/admin/users/:id', auth, async (req, res) => {
+  if (!isAdmin(req.user)) return bad(res, 'No autorizado', 403);
+  const role = req.body.role;
+  if (!['admin','user'].includes(role)) return bad(res, 'Rol no válido.');
+  const r = await q('UPDATE users SET role=$1 WHERE id=$2 RETURNING id,username,email,role', [role, req.params.id]);
+  r.rowCount ? res.json({ user: r.rows[0] }) : bad(res, 'No encontrado', 404);
+});
+app.delete('/api/admin/users/:id', auth, async (req, res) => {
+  if (!isAdmin(req.user)) return bad(res, 'No autorizado', 403);
+  if (req.params.id === req.user.id) return bad(res, 'No puedes eliminarte a ti mismo.', 400);
+  const r = await q('DELETE FROM users WHERE id=$1', [req.params.id]);
+  r.rowCount ? res.json({ ok: true }) : bad(res, 'No encontrado', 404);
+});
+app.get('/api/admin/posts', auth, async (req, res) => {
+  if (!isAdmin(req.user)) return bad(res, 'No autorizado', 403);
+  const { rows } = await q('SELECT p.id, p.type, p.title, p.body, p.created_at, u.username AS author, u.email AS author_email FROM posts p JOIN users u ON u.id=p.user_id ORDER BY p.created_at DESC LIMIT 200');
+  res.json({ posts: rows });
+});
+app.delete('/api/admin/posts/:id', auth, async (req, res) => {
+  if (!isAdmin(req.user)) return bad(res, 'No autorizado', 403);
+  const r = await q('DELETE FROM posts WHERE id=$1', [req.params.id]);
   r.rowCount ? res.json({ ok: true }) : bad(res, 'No encontrado', 404);
 });
 

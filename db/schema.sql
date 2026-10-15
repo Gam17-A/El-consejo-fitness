@@ -17,6 +17,7 @@ CREATE TABLE users (
   username      VARCHAR(24)  NOT NULL CHECK (char_length(username) >= 3),
   email         VARCHAR(254) NOT NULL,
   password_hash TEXT         NOT NULL,            -- bcrypt generado en el servidor
+  role          VARCHAR(10)  NOT NULL DEFAULT 'user' CHECK (role IN ('admin','user')),
   created_at    TIMESTAMPTZ  NOT NULL DEFAULT now()
 );
 CREATE UNIQUE INDEX users_email_uq    ON users (lower(email));
@@ -96,5 +97,8 @@ CREATE TABLE post_likes (
   user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   PRIMARY KEY (post_id, user_id)
 );
+
+-- Migración para bases de datos existentes (Render, etc.): añade role si no existe
+ALTER TABLE users ADD COLUMN IF NOT EXISTS role VARCHAR(10) NOT NULL DEFAULT 'user';
 
 COMMIT;
