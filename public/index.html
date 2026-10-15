@@ -108,7 +108,7 @@ async function localApi(m,p,b={}){
   if(key==='POST /auth/logout'){L.set('sid',null);return{ok:true}}
   if(!me)throw 'No autenticado';
   const my=a=>a.filter(x=>x.user_id===me.id);let mt;
-  if(key==='GET /me')return{user:{username:me.username,email:me.email}};
+  if(key==='GET /me')return{user:{username:me.username,email:me.email,role:me.role||'user'}};
   const rs=L.get('routines',[]),logs=L.get('logs',[]);
   if(key==='GET /routines')return{routines:my(rs)};
   if(key==='POST /routines'){
@@ -180,12 +180,12 @@ function render(){
   $('#app').onkeydown=null;
   $('#who').innerHTML=`<div class="av">${esc(S.user[0])}</div><b>${esc(S.user)}</b><button class="x" onclick="logout()">Salir</button>`;
   const T=[['rutinas','Mis rutinas'],['progreso','Progreso'],['comunidad','Comunidad']];
-  $('#app').innerHTML=`<nav>${T.map(t=>`<button class="${S.tab===t[0]?'on':''}" onclick="go('${t[0]}')">${t[1]}</button>`).join('')}</nav><div id="view"></div>`;
+  const isAdmin = S.user && (window.__adminRole==='admin');
+  $('#app').innerHTML=`<nav>${T.map(t=>`<button class="${S.tab===t[0]?'on':''}" onclick="go('${t[0]}')">${t[1]}</button>`).join('')}${window.__adminRole==='admin'?`<a href="/admin.html" class="btn sm" style="margin-left:auto;font-size:12px">Panel admin</a>`:''}</nav><div id="view"></div>`;
   ({rutinas:renderRoutines,progreso:renderProgress,comunidad:renderCommunity})[S.tab]();
 }
 async function load(){
-  try{const[r,l,w]=await Promise.all([api('GET','/routines'),api('GET','/logs?date='+today()),api('GET','/weights')]);S.routines=r.routines;S.done=l.done;S.dates=l.dates;S.total=l.total;S.weights=w.weights}catch(e){}
-  render();if(S.tab==='comunidad')loadPosts();
+  try{const[d,l,w]=await Promise.all([api('GET','/me'),api('GET','/routines'),api('GET','/weights')]);S.user=d.user.username;window.__adminRole=d.user.role||'user';S.routines=l.routines||[];S.done=(await api('GET','/logs?date='+today())).done;S.dates=(await api('GET','/logs?date='+today())).dates;S.total=(await api('GET','/logs?date='+today())).total;S.weights=w.weights||[];render();if(S.tab==='comunidad')loadPosts()}catch(e){console.error('load error',e);render()}
 }
 async function reloadLogs(){const l=await api('GET','/logs?date='+today());S.done=l.done;S.dates=l.dates;S.total=l.total}
 

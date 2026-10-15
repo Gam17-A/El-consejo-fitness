@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — El consejo fitness</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+:root{--bg:#0b0c15;--card:#12142a;--accent:#e63946;--text:#e8e8e8;--muted:#9ca3af;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.45;padding:2rem 1rem}
+.container{max-width:960px;margin:0 auto}
+h1{font-weight:800;font-size:2rem;margin-bottom:0.25rem;letter-spacing:-0.02em}
+.subtitle{color:var(--muted);margin-bottom:2rem}
+nav{display:flex;gap:0.5rem;margin-bottom:2rem;flex-wrap:wrap}
+nav button{background:var(--card);border:1px solid #2a2e4a;color:var(--text);padding:0.6rem 1rem;border-radius:8px;cursor:pointer;font-weight:600;font-family:inherit}
+nav button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+section{background:var(--card);border:1px solid #2a2e4a;border-radius:12px;padding:1.25rem;margin-bottom:1.5rem}
+h2{font-size:1.1rem;margin-bottom:0.75rem;color:#fff}
+table{width:100%;border-collapse:collapse;font-size:0.9rem}
+th{text-align:left;padding:0.5rem 0.4rem;border-bottom:2px solid #2a2e4a;color:var(--muted);font-weight:600;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.05em}
+td{padding:0.55rem 0.4rem;border-bottom:1px solid #2a2e4a;vertical-align:top}
+tr:hover td{background:#181b2e}
+.action{background:transparent;border:1px solid #e63946;color:#e63946;padding:0.35rem 0.6rem;border-radius:6px;cursor:pointer;font-size:0.8rem;font-weight:600;font-family:inherit;margin-right:0.3rem}
+.action:hover{background:#e63946;color:#fff}
+.action.ok{border-color:#2ecc71;color:#2ecc71}
+.action.ok:hover{background:#2ecc71;color:#fff}
+.msg{padding:0.75rem 1rem;border-radius:8px;margin-bottom:1rem;font-weight:600;font-size:0.9rem}
+.msg.ok{background:#1b3a2a;border:1px solid #2ecc71;color:#2ecc71}
+.msg.err{background:#3a1b1b;border:1px solid #e63946;color:#e63946}
+.hidden{display:none}
+.roles{display:flex;gap:0.5rem;margin-top:0.5rem;flex-wrap:wrap}
+.roles label{background:var(--bg);padding:0.35rem 0.7rem;border-radius:20px;border:1px solid #2a2e4a;font-size:0.85rem;cursor:pointer}
+input[type="text"]{background:var(--bg);border:1px solid #2a2e4a;color:var(--text);padding:0.5rem 0.75rem;border-radius:6px;font-family:inherit;font-size:0.9rem}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Panel de administrador</h1>
+  <p class="subtitle">El consejo fitness — solo accesible para <strong>admin</strong></p>
+
+  <nav id="tabs">
+    <button class="active" onclick="showTab('users',this)">Usuarios</button>
+    <button onclick="showTab('posts',this)">Posts</button>
+  </nav>
+
+  <div id="msg"></div>
+
+  <section id="panel-users">
+    <h2>Usuarios registrados</h2>
+    <table>
+      <thead><tr><th>Usuario</th><th>Email</th><th>Rol</th><th>Creado</th><th>Acciones</th></tr></thead>
+      <tbody id="users-body"><tr><td colspan="5" style="color:var(--muted)">Cargando...</td></tr></tbody>
+    </table>
+  </section>
+
+  <section id="panel-posts" class="hidden">
+    <h2>Posts de la comunidad</h2>
+    <table>
+      <thead><tr><th>Tipo</th><th>Título</th><th>Autor</th><th>Fecha</th><th>Acciones</th></tr></thead>
+      <tbody id="posts-body"><tr><td colspan="5" style="color:var(--muted)">Cargando...</td></tr></tbody>
+    </table>
+  </section>
+</div>
+
+<script>
+let users=[]; let posts=[];
+
+function showMsg(text,type='ok'){const m=document.getElementById('msg');m.className='msg '+type;m.textContent=text; setTimeout(()=>m.className='msg hidden',4000);}
+function showTab(name,btn){document.querySelectorAll('#tabs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('panel-users').classList.toggle('hidden',name!=='users');document.getElementById('panel-posts').classList.toggle('hidden',name!=='posts');}
+
+function renderUsers(){
+  const tb=document.getElementById('users-body');
+  tb.innerHTML = users.map(u=>
+    `<tr>
+      <td><strong>${esc(u.username)}</strong></td>
+      <td>${esc(u.email)}</td>
+      <td><span style="font-weight:600;color:${u.role==='admin'?'#e63946':'#2ecc71'}">${esc(u.role)}</span></td>
+      <td>${new Date(u.created_at).toLocaleDateString('es-ES')}</td>
+      <td>
+        <button class="action ok" onclick="setRole('${u.id}','admin')">Admin</button>
+        <button class="action" onclick="setRole('${u.id}','user')">User</button>
+        <button class="action ok" onclick="deleteUser('${u.id}')" style="border-color:#2ecc71;color:#2ecc71">Eliminar</button>
+      </td>
+    </tr>`).join('');
+}
+
+function renderPosts(){
+  const tb=document.getElementById('posts-body');
+  tb.innerHTML = posts.map(p=>
+    `<tr>
+      <td>${esc(p.type)}</td>
+      <td><strong>${esc(p.title)}</strong><br><span style="font-size:0.85rem;color:var(--muted)">${esc(p.body.substring(0,60))}${p.body.length>60?'…':''}</span></td>
+      <td>${esc(p.author)}<br><span style="font-size:0.75rem;color:var(--muted)">${esc(p.author_email||'')}</span></td>
+      <td>${new Date(p.created_at).toLocaleDateString('es-ES')}</td>
+      <td><button class="action ok" onclick="deletePost('${p.id}')">Eliminar</button></td>
+    </tr>`).join('');
+}
+
+function esc(s){const d=document.createElement('div');d.textContent=String(s);return d.innerHTML;}
+
+async function loadData(){
+  const res=await fetch('/api/admin/users',{credentials:'include'});
+  if(res.status===403){showMsg('No autorizado. Solo admin puede acceder.', 'err');document.getElementById('panel-users').innerHTML='<h2>Acceso denegado</h2><p>Necesitas ser admin.</p>';return;}
+  users=(await res.json()).users||[]; renderUsers();
+  const r2=await fetch('/api/admin/posts',{credentials:'include'});
+  posts=(await r2.json()).posts||[]; renderPosts();
+}
+
+async function setRole(id,role){
+  const res=await fetch('/api/admin/users/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({role})});
+  if(res.ok){showMsg('Rol actualizado');loadData();}else{showMsg('Error al actualizar rol','err');}
+}
+
+async function deleteUser(id){
+  if(!confirm('¿Eliminar este usuario?')) return;
+  const res=await fetch('/api/admin/users/'+id,{method:'DELETE',credentials:'include'});
+  if(res.ok){showMsg('Usuario eliminado');loadData();}else{showMsg('No se pudo eliminar','err');}
+}
+
+async function deletePost(id){
+  if(!confirm('¿Eliminar este post?')) return;
+  const res=await fetch('/api/admin/posts/'+id,{method:'DELETE',credentials:'include'});
+  if(res.ok){showMsg('Post eliminado');loadData();}else{showMsg('No se pudo eliminar','err');}
+}
+
+loadData();
+setInterval(loadData,30000);
+</script>
+</body>
+</html>
